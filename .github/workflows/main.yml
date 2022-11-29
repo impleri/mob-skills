@@ -26,13 +26,6 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
-        env:
-          GH_USER: ${{ secrets.HUB_USER }}
-          GH_TOKEN: ${{ secrets.HUB_TOKEN }}
       - name: Apply version bump (major)
         if: contains(github.event.pull_request.labels.*.name, 'major')
         uses: gradle/gradle-build-action@v2
