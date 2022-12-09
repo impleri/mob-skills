@@ -1,7 +1,7 @@
 package net.impleri.mobskills.integrations.kubejs;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
-import net.impleri.playerskills.api.PlayerSkill;
+import net.impleri.playerskills.api.ServerApi;
 import net.impleri.playerskills.api.Skill;
 import net.impleri.playerskills.registry.RegistryItemNotFound;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public class PlayerSkillDataJS {
     @HideFromJS
     private <T> Skill<T> getSkill(String skillName) {
         try {
-            return PlayerSkill.getSkill(player, skillName);
+            return ServerApi.getSkill(player, skillName);
         } catch (RegistryItemNotFound e) {
             // TODO: handle error
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class PlayerSkillDataJS {
             return false;
         }
 
-        return PlayerSkill.can(player, skill, expectedValue);
+        return ServerApi.can(player, skill, expectedValue);
     }
 
     public <T> boolean can(String skill) {
