@@ -36,3 +36,11 @@ to meet the condition.
 ## Modpacks
 
 Want to use this in a modpack? Great! This was designed with modpack developers in mind. No need to ask.
+
+
+## TODO
+
+- [] Deny interacting with a mob (e.g. trading)
+- [] Implement using tags to apply spawn rules
+- [] Implement using mod IDs to apply spawn rules
+- [] Implement replacement spawns

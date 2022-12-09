@@ -12,12 +12,15 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class MobSkillsKubeJSWrapper {
+    private static final double FISH_SPAWN_RANGE = 64;
+    private static final double MOB_SPAWN_RANGE = 128;
+
     @HideFromJS
     private List<Player> getNearbyPlayers(CheckLivingEntitySpawnEventJS event) {
         BlockPos position = event.getBlock().getPos();
         List<Player> players = (List<Player>) event.getBlock().getLevel().players();
 
-        double spawnRadius = event.getEntity().getType() == EntityType.TROPICAL_FISH ? 64 : 128;
+        double spawnRadius = event.getEntity().getType() == EntityType.TROPICAL_FISH ? FISH_SPAWN_RANGE : MOB_SPAWN_RANGE;
 
         List<Player> playersInRange = players.stream()
                 .filter(player -> Math.sqrt(player.distanceToSqr(Vec3.atCenterOf(position))) < spawnRadius)
