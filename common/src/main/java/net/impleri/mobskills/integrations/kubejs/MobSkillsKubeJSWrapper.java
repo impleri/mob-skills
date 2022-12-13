@@ -35,7 +35,11 @@ public class MobSkillsKubeJSWrapper {
     private Predicate<Player> getMatcher(Predicate<PlayerSkillDataJS> consumer) {
         return player -> {
             var skills = new PlayerSkillDataJS(player);
-            return consumer.test(skills);
+            var results = consumer.test(skills);
+
+            MobSkills.LOGGER.debug("Does player {} pass the test? {}", player.getName().getString(), results);
+
+            return results;
         };
     }
 

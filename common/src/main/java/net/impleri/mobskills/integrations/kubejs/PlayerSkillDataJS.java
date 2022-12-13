@@ -1,9 +1,9 @@
 package net.impleri.mobskills.integrations.kubejs;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
-import net.impleri.playerskills.api.ServerApi;
 import net.impleri.playerskills.api.Skill;
 import net.impleri.playerskills.registry.RegistryItemNotFound;
+import net.impleri.playerskills.server.ServerApi;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 

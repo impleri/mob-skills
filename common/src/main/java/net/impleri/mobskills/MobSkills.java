@@ -1,6 +1,6 @@
 package net.impleri.mobskills;
 
-import net.impleri.playerskills.PlayerSkillsLogger;
+import net.impleri.playerskills.utils.PlayerSkillsLogger;
 
 public class MobSkills {
     public static final String MOD_ID = "mobskills";
