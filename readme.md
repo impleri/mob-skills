@@ -44,4 +44,12 @@ Want to use this in a modpack? Great! This was designed with modpack developers 
 - [] Deny interacting with a mob (e.g. trading)
 - [] Implement using tags to apply spawn rules
 - [] Implement using mod IDs to apply spawn rules
-- [] Implement replacement spawns
+- [] `MobSkills.replaceWith()`
+- [] `MobSkills.(allow|deny)Spawner`
+- [] `MobSkills.(allow|deny)Natural`
+- [] `MobSkills.(allow|deny)Dimension`
+- Jade/TOP/WTHIT/Neat
+    - https://github.com/Snownee/Jade/blob/1.19.1-forge/src/main/java/snownee/jade/api/IWailaClientRegistration.java#L124
+    - https://github.com/McJtyMods/TheOneProbe/blob/1.16/src/main/java/mcjty/theoneprobe/api/IProbeConfigProvider.java
+    - https://docs.bai.lol/wthit/plugin/disabling_tooltip/
+    - https://github.com/VazkiiMods/Neat/blob/master/Xplat/src/main/java/vazkii/neat/NeatConfig.java
