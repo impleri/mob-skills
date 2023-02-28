@@ -7,6 +7,7 @@ import net.impleri.mobskills.restrictions.Restriction;
 import net.impleri.playerskills.api.RestrictionsApi;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Restrictions extends RestrictionsApi<EntityType<?>, Restriction> {
 
     @Override
     protected Predicate<EntityType<?>> createPredicateFor(EntityType<?> type) {
-        return target -> target.equals(type);
+        return type::equals;
     }
 
     public List<Restriction> getSpawnRestrictionsFor(EntityType<?> entity) {
@@ -40,4 +41,7 @@ public class Restrictions extends RestrictionsApi<EntityType<?>, Restriction> {
                 .toList();
     }
 
+    public boolean isUsable(Player player, EntityType<?> entity) {
+        return canPlayer(player, entity, "usable");
+    }
 }

@@ -18,11 +18,13 @@ are set, so be sure to set actual restrictions.
 
 - `nothing`: shorthand to apply all "allow" restrictions
 - `spawnable`: The mob can spawn
+- `usable`: Players that meet the condition can interact with the entity (e.g. trade with a villager)
 
 #### Deny Restriction Methods
 
 - `everything`: shorthand to apply the below "deny" abilities
 - `unspawnable`: The mob cannot spawn
+- `unusable`: Players that meet the condition cannot interact with the entity (e.g. trade with a villager)
 
 `spawnable`/`unspawnable` take an optional boolean parameter to change the spawning condition. With a `false` value
 (which is the default), the action will apply if _any_ player in spawning range matches the condition. With a `true`
@@ -45,8 +47,16 @@ MobSkillEvents.register(event => {
 
   // DENY sheep from spawning UNLESS ALL player in range has the `started_quest` skill
   event.restrict('minecraft:sheep', is => is.unspawnable(true).unless(player => player.can('skills:started_quest')));
+
+  // Players cannot interact with villagers unless they have `started_quest` skill
+  event.restrict("minecraft:villager", is => is.unusable().unless(player => player.can("skills:started_quest")));
 });
 ```
+
+### Caveats
+
+Because of the way we're handling spawn conditions, if you are using an `unless` condition, you should not also
+manipulate `usable` in the same restriction.
 
 ## Modpacks
 
