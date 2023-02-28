@@ -35,7 +35,10 @@ public class MobHelper {
                 .filter(player -> Math.sqrt(player.distanceToSqr(Vec3.atCenterOf(position))) <= radius)
                 .toList();
     }
-    
+
+    public static boolean canInteractWith(Player player, EntityType<?> entity) {
+        return Restrictions.INSTANCE.isUsable(player, entity);
+    }
 
     public static boolean canSpawn(EntityType<?> type, LevelAccessor levelAccessor, Vec3i position) {
         var spawnRadius = type.getCategory().getDespawnDistance();

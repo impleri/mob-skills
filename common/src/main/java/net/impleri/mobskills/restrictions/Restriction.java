@@ -10,14 +10,27 @@ import java.util.function.Predicate;
 public class Restriction extends AbstractRestriction<EntityType<?>> {
     public final EntitySpawnMode spawnMode;
 
+    public final boolean usable;
+
+    public Restriction(
+            EntityType entity,
+            Predicate<Player> condition,
+            @Nullable EntityType replacement,
+            @Nullable EntitySpawnMode spawnMode,
+            @Nullable Boolean usable
+    ) {
+        super(entity, condition, replacement);
+        this.spawnMode = (spawnMode != null) ? spawnMode : EntitySpawnMode.ALLOW_ALWAYS;
+        this.usable = Boolean.TRUE.equals(usable);
+    }
+
     public Restriction(
             EntityType entity,
             Predicate<Player> condition,
             @Nullable EntityType replacement,
             @Nullable EntitySpawnMode spawnMode
     ) {
-        super(entity, condition, replacement);
-        this.spawnMode = (spawnMode != null) ? spawnMode : EntitySpawnMode.ALLOW_ALWAYS;
+        this(entity, condition, replacement, spawnMode, null);
     }
 
     public Restriction(

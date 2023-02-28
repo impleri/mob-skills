@@ -24,7 +24,8 @@ public class RestrictionJS extends Restriction {
                 type,
                 builder.condition,
                 builder.replacement,
-                builder.spawnMode
+                builder.spawnMode,
+                builder.usable
         );
     }
 
@@ -32,6 +33,7 @@ public class RestrictionJS extends Restriction {
         public EntityType<?> replacement;
 
         public EntitySpawnMode spawnMode = EntitySpawnMode.ALLOW_ALWAYS;
+        public boolean usable = true;
 
         @HideFromJS
         public Builder(ResourceLocation id) {
@@ -94,13 +96,27 @@ public class RestrictionJS extends Restriction {
             return unspawnable(false);
         }
 
+        public Builder usable() {
+            this.usable = true;
+
+            return this;
+        }
+
+        public Builder unusable() {
+            this.usable = false;
+
+            return this;
+        }
+
         public Builder nothing() {
+            this.usable = true;
             this.spawnMode = EntitySpawnMode.ALLOW_ALWAYS;
 
             return this;
         }
 
         public Builder everything() {
+            this.usable = false;
             this.spawnMode = EntitySpawnMode.DENY_ALWAYS;
 
             return this;

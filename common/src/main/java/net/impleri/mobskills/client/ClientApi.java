@@ -14,4 +14,7 @@ public class ClientApi extends RestrictionsClient<EntityType<?>, Restriction> {
         super(registry, serverApi);
     }
 
+    public boolean isUsable(EntityType<?> entity) {
+        return canPlayer(entity, "usable");
+    }
 }
