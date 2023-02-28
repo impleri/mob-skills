@@ -5,51 +5,49 @@ using [Player Skills](https://github.com/impleri/player-skills).
 
 ## KubeJS API
 
-### MobSkills Helper
+### Register
 
-The MobSkills helper is expected to be used within the KubeJS `EntityEvents.checkSpawn` event callback. It provides a
-few shorthand methods that fit the pattern of `(deny|allow)(If|unless)(Any|All)`. Each method takes the KubeJS event as
-the first parameter and a callback for each player's skills wrapper with can and cannot methods. You can then build your
-own logic from there. Just remember that `if` requires the condition to pass and `unless` requires it to fail. `Any`
-will trigger
-`deny` or `allow` if _any_ player in range meets the appropriate condition while `All` requires _all_ players in range
-to meet the condition.
+We use the `MobSkillEvents.register` ***server*** event to register item restrictions. Registration requires a
+test (`if` or `unless`) in a callback function which uses a player skills condition object (`can` and `cannot` methods).
+If the player ***matches*** the criteria, the following restrictions are applied. This can cascade with other
+restrictions, so any restrictions which disallow an action will trump any which do allow it. We also expose these
+methods to indicate what restrictions are in place for when a player meets that condition. By default, no restrictions
+are set, so be sure to set actual restrictions.
+
+#### Allow Restriction Methods
+
+- `nothing`: shorthand to apply all "allow" restrictions
+- `spawnable`: The mob can spawn
+
+#### Deny Restriction Methods
+
+- `everything`: shorthand to apply the below "deny" abilities
+- `unspawnable`: The mob cannot spawn
+
+`spawnable`/`unspawnable` take an optional boolean parameter to change the spawning condition. With a `false` value
+(which is the default), the action will apply if _any_ player in spawning range matches the condition. With a `true`
+value, the action will apply if _all_ players in spawning range match the condition. Additionally, there is an `always`
+condition to make the spawn condition apply always.
 
 ```js
-  // Log all check spawn events (default KubeJS handling)
-  EntityEvents.checkSpawn(event => {
-    console.info(`Entity ${event.entity.name} trying to spawn in ${event.block.dimension} at ${event.block.pos.toShortString()}`);
-  });
+MobSkillEvents.register(event => {
+  // Always prevent blazes from spawning (default KubeJS handling)
+  event.restrict('minecraft:blaze', is => is.unspawnable().always());
 
- // Always prevent blazes from spawning (default KubeJS handling)
- EntityEvents.checkSpawn('minecraft:blaze', event => event.cancel());
+  // ALLOW creepers to spawn IF ALL players in range have the `started_quest` skill
+  event.restrict("minecraft:creeper", is => is.spawnable(true).if(player => player.can("skills:started_quest")));
 
-  // Block creepers from spawning if a player in spawn range has started the quest
-  EntityEvents.checkSpawn('minecraft:creeper', event => {
-    MobSkills.allowUnlessAny(event, playerCondition => playerCondition.can('skills:started_quest'));
-  });
-  
-  // Block zombies from spawning unless all players in spawn range have started the quest
-  EntityEvents.checkSpawn('minecraft:zombie', event => {
-    MobSkills.denyUnlessAll(event, playerCondition => playerCondition.can('skills:started_quest'));
-  });
+  // ALLOW cows to spawn UNLESS ANY players in range have the `started_quest` skill
+  event.restrict("minecraft:cow", is => is.spawnable().unless(player => player.can("skills:started_quest")));
+
+  // DENY zombies from spawning IF ANY player in range has the `started_quest` skill
+  event.restrict('minecraft:zombie', is => is.unspawnable().if(player => player.can('skills:started_quest')));
+
+  // DENY sheep from spawning UNLESS ALL player in range has the `started_quest` skill
+  event.restrict('minecraft:sheep', is => is.unspawnable(true).unless(player => player.can('skills:started_quest')));
+});
 ```
 
 ## Modpacks
 
 Want to use this in a modpack? Great! This was designed with modpack developers in mind. No need to ask.
-
-## TODO
-
-- [] Deny interacting with a mob (e.g. trading)
-- [] Implement using tags to apply spawn rules
-- [] Implement using mod IDs to apply spawn rules
-- [] `MobSkills.replaceWith()`
-- [] `MobSkills.(allow|deny)Spawner`
-- [] `MobSkills.(allow|deny)Natural`
-- [] `MobSkills.(allow|deny)Dimension`
-- Jade/TOP/WTHIT/Neat
-    - https://github.com/Snownee/Jade/blob/1.19.1-forge/src/main/java/snownee/jade/api/IWailaClientRegistration.java#L124
-    - https://github.com/McJtyMods/TheOneProbe/blob/1.16/src/main/java/mcjty/theoneprobe/api/IProbeConfigProvider.java
-    - https://docs.bai.lol/wthit/plugin/disabling_tooltip/
-    - https://github.com/VazkiiMods/Neat/blob/master/Xplat/src/main/java/vazkii/neat/NeatConfig.java
