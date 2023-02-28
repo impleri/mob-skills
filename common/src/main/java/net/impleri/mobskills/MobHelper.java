@@ -37,7 +37,11 @@ public class MobHelper {
     }
 
     public static boolean canInteractWith(Player player, EntityType<?> entity) {
-        return Restrictions.INSTANCE.isUsable(player, entity);
+        var usable = Restrictions.INSTANCE.isUsable(player, entity);
+
+        MobSkills.LOGGER.debug("Can {} interact with {}? {}", player.getName().getString(), getEntityKey(entity), usable);
+
+        return usable;
     }
 
     public static boolean canSpawn(EntityType<?> type, LevelAccessor levelAccessor, Vec3i position) {
