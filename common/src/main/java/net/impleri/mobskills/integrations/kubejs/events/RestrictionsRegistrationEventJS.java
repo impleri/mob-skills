@@ -5,23 +5,22 @@ import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.impleri.mobskills.MobHelper;
 import net.impleri.mobskills.restrictions.Registry;
-import net.impleri.playerskills.utils.SkillResourceLocation;
+import net.impleri.playerskills.utils.RegistrationType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+
 public class RestrictionsRegistrationEventJS extends EventJS {
     public void restrict(String entityType, @NotNull Consumer<RestrictionJS.Builder> consumer) {
-        if (entityType.trim().endsWith(":*")) {
-            var namespace = entityType.substring(0, entityType.indexOf(":"));
+        RegistrationType<EntityType<?>> registrationType = new RegistrationType<EntityType<?>>(entityType, net.minecraft.core.Registry.ENTITY_TYPE_REGISTRY);
 
-            restrictNamespace(namespace, consumer);
-            return;
-        }
-
-        var name = SkillResourceLocation.of(entityType);
-        restrictEntity(name, consumer);
+        registrationType.ifNamespace(namespace -> restrictNamespace(namespace, consumer));
+        registrationType.ifName(name -> restrictEntity(name, consumer));
+        registrationType.ifTag(tag -> restrictTag(tag, consumer));
     }
 
     @HideFromJS
@@ -43,9 +42,19 @@ public class RestrictionsRegistrationEventJS extends EventJS {
 
     @HideFromJS
     private void restrictNamespace(String namespace, @NotNull Consumer<RestrictionJS.Builder> consumer) {
+        ConsoleJS.SERVER.info("Creating mob restrictions for mod " + namespace);
+
         net.minecraft.core.Registry.ENTITY_TYPE.keySet()
                 .stream()
                 .filter(name -> name.getNamespace().equals(namespace))
                 .forEach(name -> restrictEntity(name, consumer));
+    }
+
+    @HideFromJS
+    private void restrictTag(TagKey<EntityType<?>> tag, @NotNull Consumer<RestrictionJS.Builder> consumer) {
+        ConsoleJS.SERVER.info("Creating mob restrictions for tag " + tag);
+        net.minecraft.core.Registry.ENTITY_TYPE.stream()
+                .filter(type -> type.is(tag))
+                .forEach(type -> restrictEntity(MobHelper.getEntityKey(type), consumer));
     }
 }
