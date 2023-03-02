@@ -33,8 +33,14 @@ condition to make the spawn condition apply always.
 
 ```js
 MobSkillEvents.register(event => {
-  // Always prevent blazes from spawning (default KubeJS handling)
+  // Always prevent blazes from spawning
   event.restrict('minecraft:blaze', is => is.unspawnable().always());
+
+  // Prevent all vanilla mobs from spawning
+  event.restrict('@minecraft', is => is.unspawnable().always());
+
+  // Prevent all illagers from spawning
+  event.restrict('#raiders', is => is.unspawnable().always());
 
   // ALLOW creepers to spawn IF ALL players in range have the `started_quest` skill
   event.restrict("minecraft:creeper", is => is.spawnable(true).if(player => player.can("skills:started_quest")));
