@@ -7,7 +7,7 @@ using [Player Skills](https://github.com/impleri/player-skills).
 
 ### Register
 
-We use the `MobSkillEvents.register` ***server*** event to register item restrictions. Registration requires a
+We use the `MobSkillEvents.register` ***server*** event to register mob restrictions. Registration requires a
 test (`if` or `unless`) in a callback function which uses a player skills condition object (`can` and `cannot` methods).
 If the player ***matches*** the criteria, the following restrictions are applied. This can cascade with other
 restrictions, so any restrictions which disallow an action will trump any which do allow it. We also expose these
@@ -63,6 +63,32 @@ MobSkillEvents.register(event => {
 
 Because of the way we're handling spawn conditions, if you are using an `unless` condition, you should not also
 manipulate `usable` in the same restriction.
+
+## Developers
+
+Add the following to your `build.gradle`. I depend
+on [Architectury API](https://github.com/architectury/architectury-api), [KubeJS](https://github.com/KubeJS-Mods/KubeJS),
+and [PlayerSkills](https://github.com/impleri/player-skills), so you'll need those as well.
+
+```groovy
+dependencies {
+    // Common should always be included 
+    modImplementation "net.impleri:mob-skills-${minecraft_version}:${mobskills_version}"
+    // Plus forge
+    modApi "net.impleri:mob-skills-${minecraft_version}-forge:${mobskills_version}"
+    // Or fabric
+    modApi "net.impleri:mob-skills-${minecraft_version}-fabric:${mobskills_version}"
+}
+repositories {
+    maven {
+        url = "https://maven.impleri.org/minecraft"
+        name = "Impleri Mods"
+        content {
+            includeGroup "net.impleri"
+        }
+    }
+}
+```
 
 ## Modpacks
 
