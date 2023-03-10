@@ -1,8 +1,8 @@
 package net.impleri.mobskills.api;
 
 import net.impleri.mobskills.MobHelper;
+import net.impleri.mobskills.MobSkills;
 import net.impleri.mobskills.restrictions.EntitySpawnMode;
-import net.impleri.mobskills.restrictions.Registry;
 import net.impleri.mobskills.restrictions.Restriction;
 import net.impleri.playerskills.api.RestrictionsApi;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 public class Restrictions extends RestrictionsApi<EntityType<?>, Restriction> {
     private static final Field[] allRestrictionFields = Restriction.class.getDeclaredFields();
 
-    public static final Restrictions INSTANCE = new Restrictions(Registry.INSTANCE, allRestrictionFields);
+    public static final Restrictions INSTANCE = new Restrictions(MobSkills.RESTRICTIONS, allRestrictionFields);
 
     private Restrictions(net.impleri.playerskills.restrictions.Registry<Restriction> registry, Field[] fields) {
         super(registry, fields);

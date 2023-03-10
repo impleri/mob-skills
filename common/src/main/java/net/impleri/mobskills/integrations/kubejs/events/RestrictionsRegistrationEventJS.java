@@ -4,7 +4,7 @@ import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.impleri.mobskills.MobHelper;
-import net.impleri.mobskills.restrictions.Registry;
+import net.impleri.mobskills.MobSkills;
 import net.impleri.playerskills.utils.RegistrationType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -37,7 +37,7 @@ public class RestrictionsRegistrationEventJS extends EventJS {
 
         var restriction = builder.createObject(type);
         ConsoleJS.SERVER.info("Created mob restriction for " + name);
-        Registry.INSTANCE.add(name, restriction);
+        MobSkills.RESTRICTIONS.add(name, restriction);
     }
 
     @HideFromJS
