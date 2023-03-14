@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "mobskills",
+  "version": "${version}",
+  "name": "Mob Skills",
+  "description": "A library mod that exposes KubeJS methods to control mob spawning.",
+  "authors": [
+    "impleri"
+  ],
+  "contact": {
+    "homepage": "https://github.com/impleri/mob-skills",
+    "sources": "https://github.com/impleri/mob-skills",
+    "issues": "https://github.com/impleri/mob-skills/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/mobskills/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.impleri.mobskills.fabric.MobSkillsFabric"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabric": "*",
+    "minecraft": "1.19.2",
+    "architectury": ">=6.2.43",
+    "playerskills": ">=1.6.0"
+  }
+}
