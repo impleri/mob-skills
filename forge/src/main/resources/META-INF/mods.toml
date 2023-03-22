@@ -16,7 +16,7 @@ A library mod that exposes KubeJS methods to control mob spawning.
 [[dependencies.mobskills]]
 modId = "playerskills"
 mandatory = true
-versionRange = "[1.6,)"
+versionRange = "[1.7,)"
 ordering = "NONE"
 side = "BOTH"
 
