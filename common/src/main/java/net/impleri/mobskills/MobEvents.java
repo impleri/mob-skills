@@ -27,7 +27,7 @@ public class MobEvents {
 
     private void onStartup(MinecraftServer minecraftServer) {
         if (Platform.isModLoaded("kubejs")) {
-            net.impleri.mobskills.integrations.kubejs.MobSkillsPlugin.onStartup();
+            net.impleri.mobskills.integrations.kubejs.MobSkillsPlugin.onStartup(minecraftServer);
         }
     }
 
@@ -44,7 +44,7 @@ public class MobEvents {
     private EventResult onCheckSpawn(LivingEntity livingEntity, LevelAccessor levelAccessor, double x, double y, double z, MobSpawnType mobSpawnType, @Nullable BaseSpawner baseSpawner) {
         var pos = new Vec3i(x, y, z);
 
-        if (MobHelper.canSpawn(livingEntity.getType(), levelAccessor, pos)) {
+        if (MobHelper.canSpawn(livingEntity, levelAccessor, pos)) {
             return EventResult.pass();
         }
 

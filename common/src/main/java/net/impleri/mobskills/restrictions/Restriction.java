@@ -1,10 +1,12 @@
 package net.impleri.mobskills.restrictions;
 
 import net.impleri.playerskills.restrictions.AbstractRestriction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class Restriction extends AbstractRestriction<EntityType<?>> {
@@ -15,37 +17,16 @@ public class Restriction extends AbstractRestriction<EntityType<?>> {
     public Restriction(
             EntityType entity,
             Predicate<Player> condition,
-            @Nullable EntityType replacement,
+            @Nullable List<ResourceLocation> includeDimensions,
+            @Nullable List<ResourceLocation> excludeDimensions,
+            @Nullable List<ResourceLocation> includeBiomes,
+            @Nullable List<ResourceLocation> excludeBiomes,
             @Nullable EntitySpawnMode spawnMode,
-            @Nullable Boolean usable
-    ) {
-        super(entity, condition, replacement);
-        this.spawnMode = (spawnMode != null) ? spawnMode : EntitySpawnMode.ALLOW_ALWAYS;
-        this.usable = Boolean.TRUE.equals(usable);
-    }
-
-    public Restriction(
-            EntityType entity,
-            Predicate<Player> condition,
-            @Nullable EntityType replacement,
-            @Nullable EntitySpawnMode spawnMode
-    ) {
-        this(entity, condition, replacement, spawnMode, null);
-    }
-
-    public Restriction(
-            EntityType entity,
-            Predicate<Player> condition,
+            @Nullable Boolean usable,
             @Nullable EntityType replacement
     ) {
-        this(entity, condition, replacement, null);
-    }
-
-    public Restriction(
-            EntityType entity,
-            Predicate<Player> condition,
-            @Nullable EntitySpawnMode spawnMode
-    ) {
-        this(entity, condition, null, spawnMode);
+        super(entity, condition, includeDimensions, excludeDimensions, includeBiomes, excludeBiomes, replacement);
+        this.spawnMode = (spawnMode != null) ? spawnMode : EntitySpawnMode.ALLOW_ALWAYS;
+        this.usable = Boolean.TRUE.equals(usable);
     }
 }
