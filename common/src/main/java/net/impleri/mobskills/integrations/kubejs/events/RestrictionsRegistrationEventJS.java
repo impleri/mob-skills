@@ -1,12 +1,13 @@
 package net.impleri.mobskills.integrations.kubejs.events;
 
-import dev.latvian.mods.kubejs.event.EventJS;
+import dev.latvian.mods.kubejs.server.ServerEventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.impleri.mobskills.MobHelper;
 import net.impleri.mobskills.MobSkills;
 import net.impleri.playerskills.utils.RegistrationType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 
-public class RestrictionsRegistrationEventJS extends EventJS {
+public class RestrictionsRegistrationEventJS extends ServerEventJS {
+    private final MinecraftServer server;
+
+    public RestrictionsRegistrationEventJS(MinecraftServer server) {
+        this.server = server;
+    }
+
     public void restrict(String entityType, @NotNull Consumer<RestrictionJS.Builder> consumer) {
         RegistrationType<EntityType<?>> registrationType = new RegistrationType<EntityType<?>>(entityType, net.minecraft.core.Registry.ENTITY_TYPE_REGISTRY);
 
@@ -25,7 +32,7 @@ public class RestrictionsRegistrationEventJS extends EventJS {
 
     @HideFromJS
     private void restrictEntity(ResourceLocation name, @NotNull Consumer<RestrictionJS.Builder> consumer) {
-        var builder = new RestrictionJS.Builder(name);
+        var builder = new RestrictionJS.Builder(name, server);
 
         consumer.accept(builder);
 

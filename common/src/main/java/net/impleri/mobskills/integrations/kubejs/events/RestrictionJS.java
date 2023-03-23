@@ -10,6 +10,7 @@ import net.impleri.playerskills.utils.SkillResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.function.Predicate;
@@ -23,9 +24,13 @@ public class RestrictionJS extends Restriction {
         super(
                 type,
                 builder.condition,
-                builder.replacement,
+                builder.includeDimensions,
+                builder.excludeDimensions,
+                builder.includeBiomes,
+                builder.excludeBiomes,
                 builder.spawnMode,
-                builder.usable
+                builder.usable,
+                builder.replacement
         );
     }
 
@@ -36,8 +41,8 @@ public class RestrictionJS extends Restriction {
         public boolean usable = true;
 
         @HideFromJS
-        public Builder(ResourceLocation id) {
-            super(id);
+        public Builder(ResourceLocation id, MinecraftServer server) {
+            super(id, server);
         }
 
         @Override
