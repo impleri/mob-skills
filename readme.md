@@ -7,12 +7,13 @@ using [Player Skills](https://github.com/impleri/player-skills).
 
 ### Register
 
-We use the `MobSkillEvents.register` ***server*** event to register mob restrictions. Registration requires a
-test (`if` or `unless`) in a callback function which uses a player skills condition object (`can` and `cannot` methods).
-If the player ***matches*** the criteria, the following restrictions are applied. This can cascade with other
-restrictions, so any restrictions which disallow an action will trump any which do allow it. We also expose these
-methods to indicate what restrictions are in place for when a player meets that condition. By default, no restrictions
-are set, so be sure to set actual restrictions.
+We use the `mobSkills.register` event to register mob restrictions. If the player ***matches*** the criteria, the
+following restrictions are applied. This can cascade with other restrictions, so any restrictions which disallow an
+action will trump any which do allow it. We also expose these methods to indicate what restrictions are in place for
+when a player meets that condition. By default, no restrictions are set, so be sure to set actual restrictions.
+
+As an extension to PlayerSkills, all
+the [common restriction facets](https://github.com/impleri/player-skills#kubejs-restrictions-api) are usable here.
 
 #### Allow Restriction Methods
 
@@ -32,7 +33,7 @@ value, the action will apply if _all_ players in spawning range match the condit
 condition to make the spawn condition apply always.
 
 ```js
-MobSkillEvents.register(event => {
+onEvent('mobSkills.register', (event) => {
   // Always prevent blazes from spawning
   event.restrict('minecraft:blaze', is => is.unspawnable().always());
 

@@ -1,17 +1,17 @@
 package net.impleri.mobskills;
 
-import net.impleri.mobskills.api.Restrictions;
-import net.impleri.mobskills.restrictions.Restriction;
+import net.impleri.mobskills.restrictions.Restrictions;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class MobHelper {
     public static ResourceLocation getEntityKey(EntityType<?> type) {
@@ -44,41 +44,15 @@ public class MobHelper {
         return usable;
     }
 
-    public static boolean canSpawn(EntityType<?> type, LevelAccessor levelAccessor, Vec3i position) {
+    public static boolean canSpawn(LivingEntity entity, LevelAccessor levelAccessor, Vec3i position) {
+        var type = entity.getType();
         var spawnRadius = type.getCategory().getDespawnDistance();
+
+        var dimension = entity.getLevel().dimension().location();
+        var biome = levelAccessor.getBiome(new BlockPos(position)).unwrapKey().orElseThrow().location();
 
         var playersInRange = getNearbyPlayers((List<Player>) levelAccessor.players(), position, spawnRadius);
 
-        MobSkills.LOGGER.debug("Found {} players within {} blocks of {}", playersInRange.size(), spawnRadius, position.toShortString());
-
-        var restrictions = Restrictions.INSTANCE.getSpawnRestrictionsFor(type);
-
-        MobSkills.LOGGER.debug("Found {} restrictions for {} spawning", restrictions.size(), getEntityKey(type));
-
-        var denials = restrictions.stream()
-                .filter(restriction -> !doesRestrictionAllowSpawn(restriction, playersInRange))
-                .count();
-
-        return denials == 0;
+        return Restrictions.INSTANCE.canSpawnAround(type, playersInRange, dimension, biome);
     }
-
-    private static boolean doesRestrictionAllowSpawn(Restriction restriction, List<Player> players) {
-        return switch (restriction.spawnMode) {
-            case ALLOW_IF_ANY_MATCH, DENY_UNLESS_ANY_MATCH -> ifAny(players, restriction.condition);
-            case ALLOW_IF_ALL_MATCH, DENY_UNLESS_ALL_MATCH -> ifAll(players, restriction.condition);
-            case ALLOW_UNLESS_ANY_MATCH, DENY_IF_ALL_MATCH -> !ifAll(players, restriction.condition);
-            case ALLOW_UNLESS_ALL_MATCH, DENY_IF_ANY_MATCH -> !ifAny(players, restriction.condition);
-            case ALLOW_ALWAYS -> true;
-            case DENY_ALWAYS -> false;
-        };
-    }
-
-    private static boolean ifAny(List<Player> players, Predicate<Player> consumer) {
-        return players.stream().anyMatch(consumer);
-    }
-
-    private static boolean ifAll(List<Player> players, Predicate<Player> consumer) {
-        return players.stream().allMatch(consumer);
-    }
-
 }
