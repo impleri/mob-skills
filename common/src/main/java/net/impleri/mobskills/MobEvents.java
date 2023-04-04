@@ -1,10 +1,16 @@
 package net.impleri.mobskills;
 
+import com.mojang.brigadier.CommandDispatcher;
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.platform.Platform;
+import net.impleri.playerskills.commands.PlayerSkillsCommands;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +29,14 @@ public class MobEvents {
         EntityEvent.LIVING_CHECK_SPAWN.register(this::onCheckSpawn);
 
         InteractionEvent.INTERACT_ENTITY.register(this::onInteract);
+    }
+
+    public void registerCommands() {
+        CommandRegistrationEvent.EVENT.register(this::registerDebugCommand);
+    }
+
+    private void registerDebugCommand(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection selection) {
+        PlayerSkillsCommands.registerDebug(dispatcher, "mobskills", PlayerSkillsCommands.toggleDebug("Mob Skills", MobSkills::toggleDebug));
     }
 
     private void onStartup(MinecraftServer minecraftServer) {
