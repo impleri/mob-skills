@@ -1,11 +1,12 @@
 package net.impleri.mobskills.integrations.kubejs.events;
 
-import dev.latvian.mods.kubejs.server.ServerEventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.impleri.mobskills.MobHelper;
 import net.impleri.mobskills.MobSkills;
-import net.impleri.playerskills.utils.RegistrationType;
+import net.impleri.mobskills.restrictions.Restriction;
+import net.impleri.playerskills.restrictions.AbstractRegistrationEventJS;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.TagKey;
@@ -13,23 +14,16 @@ import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 
-public class RestrictionsRegistrationEventJS extends ServerEventJS {
+public class RestrictionsRegistrationEventJS extends AbstractRegistrationEventJS<EntityType<?>, Restriction, RestrictionJS.Builder> {
     public RestrictionsRegistrationEventJS(MinecraftServer s) {
-        super(s);
-    }
-
-    public void restrict(String entityType, @NotNull Consumer<RestrictionJS.Builder> consumer) {
-        RegistrationType<EntityType<?>> registrationType = new RegistrationType<EntityType<?>>(entityType, net.minecraft.core.Registry.ENTITY_TYPE_REGISTRY);
-
-        registrationType.ifNamespace(namespace -> restrictNamespace(namespace, consumer));
-        registrationType.ifName(name -> restrictEntity(name, consumer));
-        registrationType.ifTag(tag -> restrictTag(tag, consumer));
+        super(s, "mob", Registry.ENTITY_TYPE);
     }
 
     @HideFromJS
-    private void restrictEntity(ResourceLocation name, @NotNull Consumer<RestrictionJS.Builder> consumer) {
+    protected void restrictOne(ResourceLocation name, @NotNull Consumer<RestrictionJS.Builder> consumer) {
         var builder = new RestrictionJS.Builder(name, server);
 
         consumer.accept(builder);
@@ -41,25 +35,18 @@ public class RestrictionsRegistrationEventJS extends ServerEventJS {
         }
 
         var restriction = builder.createObject(type);
-        ConsoleJS.SERVER.info("Created mob restriction for " + name);
+
         MobSkills.RESTRICTIONS.add(name, restriction);
+        logRestrictionCreation(restriction, name);
     }
 
-    @HideFromJS
-    private void restrictNamespace(String namespace, @NotNull Consumer<RestrictionJS.Builder> consumer) {
-        ConsoleJS.SERVER.info("Creating mob restrictions for mod " + namespace);
-
-        net.minecraft.core.Registry.ENTITY_TYPE.keySet()
-                .stream()
-                .filter(name -> name.getNamespace().equals(namespace))
-                .forEach(name -> restrictEntity(name, consumer));
+    @Override
+    public Predicate<EntityType<?>> isTagged(TagKey<EntityType<?>> tag) {
+        return type -> type.is(tag);
     }
 
-    @HideFromJS
-    private void restrictTag(TagKey<EntityType<?>> tag, @NotNull Consumer<RestrictionJS.Builder> consumer) {
-        ConsoleJS.SERVER.info("Creating mob restrictions for tag " + tag);
-        net.minecraft.core.Registry.ENTITY_TYPE.stream()
-                .filter(type -> type.is(tag))
-                .forEach(type -> restrictEntity(MobHelper.getEntityKey(type), consumer));
+    @Override
+    public ResourceLocation getName(EntityType<?> resource) {
+        return MobHelper.getEntityKey(resource);
     }
 }
