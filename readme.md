@@ -1,8 +1,7 @@
 # Mob Skills
 
 A library mod to control mob spawning using skill-based restrictions created in KubeJS scripts. If you've seen Mob
-Stages in 1.12, then you have a rough idea of what this mod does. Out of the box, it provides a registry for tracking
-mob spawning restrictions and uses it whenever a mob spawn is attempted.
+Stages in 1.12, then you have a rough idea of what this mod does.
 
 [![CurseForge](https://cf.way2muchnoise.eu/short_714844.svg)](https://www.curseforge.com/minecraft/mc-mods/mob-skills)
 [![Modrinth](https://img.shields.io/modrinth/dt/mob-skills?color=bcdeb7&label=%20&logo=modrinth&logoColor=096765&style=plastic)](https://modrinth.com/mod/mob-skills)
@@ -21,7 +20,8 @@ mob spawning restrictions and uses it whenever a mob spawn is attempted.
 
 ## Concepts
 
-This mod leans extensively on Player Skills by creating and consuming the Skill-based Restrictions.
+This mod leans extensively on Player Skills by creating and consuming the Skill-based Restrictions. Out of the box, it
+can restrict mob spawning and player-mob interaction (i.e. right-clicking to trade with a villager).
 
 ## KubeJS API
 
