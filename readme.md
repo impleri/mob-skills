@@ -56,6 +56,18 @@ restrictions. [See Player Skills documentation for the shared API](https://githu
 #### Additional Methods
 
 - `always()` - Change `spanwable`/`unspawnable` into an absolute value instead of a condition
+- `fromSpawner(spawner: string)` - Add a spawn type
+
+##### Spawn Types
+
+We have a shortened list of spawn types which we are allowing granular spawn restrictions. We want to keep breeding,
+spawn eggs, direct summons, and more interaction-based spawns as-is.
+
+- `natural` - A normal, random spawn
+- `spawner` - A nearby mob spawner block
+- `structure` - A spawn related to a structure (e.g. guardians, wither skeletons)
+- `patrol` - Really a subset of "natural" but related to illager patrols
+- `chunk` - A natural spawn from when the chunk generates (e.g. villager)
 
 #### Examples
 
@@ -69,6 +81,9 @@ MobSkillEvents.register(event => {
 
   // Prevent all illagers from spawning
   event.restrict('#raiders', is => is.unspawnable().always());
+
+  // Prevent all vanilla illager patrols from spawning
+  event.restrict('minecraft:*', is => is.unspawnable().fromSpawner("patrol").always());
 
   // ALLOW creepers to spawn IF ALL players in range have the `started_quest` skill
   event.restrict("minecraft:creeper", is => is.spawnable(true).if(player => player.can("skills:started_quest")));
