@@ -50,7 +50,7 @@ public class MobEvents {
             return EventResult.pass();
         }
 
-        MobSkills.LOGGER.info("Preventing {} from interacting with {}", player.getName().getString(), MobHelper.getEntityKey(entity.getType()));
+        MobSkills.LOGGER.debug("Preventing {} from interacting with {}", player.getName().getString(), MobHelper.getEntityKey(entity.getType()));
 
         return EventResult.interruptFalse();
     }
@@ -58,11 +58,11 @@ public class MobEvents {
     private EventResult onCheckSpawn(LivingEntity livingEntity, LevelAccessor levelAccessor, double x, double y, double z, MobSpawnType mobSpawnType, @Nullable BaseSpawner baseSpawner) {
         var pos = new Vec3i(x, y, z);
 
-        if (MobHelper.canSpawn(livingEntity, levelAccessor, pos)) {
+        if (MobHelper.canSpawn(livingEntity, levelAccessor, pos, mobSpawnType)) {
             return EventResult.pass();
         }
 
-        MobSkills.LOGGER.info("Preventing {} from spawning at {}", MobHelper.getEntityKey(livingEntity.getType()), pos.toShortString());
+        MobSkills.LOGGER.debug("Preventing {} from spawning at {}", MobHelper.getEntityKey(livingEntity.getType()), pos.toShortString());
 
         return EventResult.interruptFalse();
     }
