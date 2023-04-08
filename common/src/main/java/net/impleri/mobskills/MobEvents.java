@@ -1,10 +1,15 @@
 package net.impleri.mobskills;
 
+import com.mojang.brigadier.CommandDispatcher;
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.platform.Platform;
+import net.impleri.playerskills.commands.PlayerSkillsCommands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +30,14 @@ public class MobEvents {
         InteractionEvent.INTERACT_ENTITY.register(this::onInteract);
     }
 
+    public void registerCommands() {
+        CommandRegistrationEvent.EVENT.register(this::registerDebugCommand);
+    }
+
+    private void registerDebugCommand(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection selection) {
+        PlayerSkillsCommands.registerDebug(dispatcher, "mobskills", PlayerSkillsCommands.toggleDebug("Mob Skills", MobSkills::toggleDebug));
+    }
+
     private void onStartup(MinecraftServer minecraftServer) {
         if (Platform.isModLoaded("kubejs")) {
             net.impleri.mobskills.integrations.kubejs.MobSkillsPlugin.onStartup(minecraftServer);
@@ -36,7 +49,7 @@ public class MobEvents {
             return EventResult.pass();
         }
 
-        MobSkills.LOGGER.info("Preventing {} from interacting with {}", player.getName().getString(), MobHelper.getEntityKey(entity.getType()));
+        MobSkills.LOGGER.debug("Preventing {} from interacting with {}", player.getName().getString(), MobHelper.getEntityKey(entity.getType()));
 
         return EventResult.interruptFalse();
     }
@@ -44,11 +57,11 @@ public class MobEvents {
     private EventResult onCheckSpawn(LivingEntity livingEntity, LevelAccessor levelAccessor, double x, double y, double z, MobSpawnType mobSpawnType, @Nullable BaseSpawner baseSpawner) {
         var pos = new Vec3i(x, y, z);
 
-        if (MobHelper.canSpawn(livingEntity, levelAccessor, pos)) {
+        if (MobHelper.canSpawn(livingEntity, levelAccessor, pos, mobSpawnType)) {
             return EventResult.pass();
         }
 
-        MobSkills.LOGGER.info("Preventing {} from spawning at {}", MobHelper.getEntityKey(livingEntity.getType()), pos.toShortString());
+        MobSkills.LOGGER.debug("Preventing {} from spawning at {}", MobHelper.getEntityKey(livingEntity.getType()), pos.toShortString());
 
         return EventResult.interruptFalse();
     }

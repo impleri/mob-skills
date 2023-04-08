@@ -1,6 +1,7 @@
 package net.impleri.mobskills.integrations.kubejs.events;
 
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.impleri.mobskills.restrictions.EntitySpawnMode;
 import net.impleri.mobskills.restrictions.Restriction;
@@ -12,13 +13,26 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class RestrictionJS extends Restriction {
     private static final ResourceKey<Registry<Restriction>> key = ResourceKey.createRegistryKey(SkillResourceLocation.of("mob_restriction_builders_registry"));
 
     public static final RegistryObjectBuilderTypes<Restriction> registry = RegistryObjectBuilderTypes.add(key, Restriction.class);
+
+    private static final Map<String, MobSpawnType> spawnTypeMap = new HashMap<>() {{
+        put("natural", MobSpawnType.NATURAL);
+        put("chunk", MobSpawnType.CHUNK_GENERATION);
+        put("spawner", MobSpawnType.SPAWNER);
+        put("structure", MobSpawnType.STRUCTURE);
+        put("patrol", MobSpawnType.PATROL);
+    }};
 
     public RestrictionJS(EntityType<?> type, Builder builder) {
         super(
@@ -30,6 +44,8 @@ public class RestrictionJS extends Restriction {
                 builder.excludeBiomes,
                 builder.spawnMode,
                 builder.usable,
+                builder.includeSpawners,
+                builder.excludeSpawners,
                 builder.replacement
         );
     }
@@ -39,6 +55,11 @@ public class RestrictionJS extends Restriction {
 
         public EntitySpawnMode spawnMode = EntitySpawnMode.ALLOW_ALWAYS;
         public boolean usable = true;
+
+        public List<MobSpawnType> includeSpawners = new ArrayList<>();
+
+        public List<MobSpawnType> excludeSpawners = new ArrayList<>();
+
 
         @HideFromJS
         public Builder(ResourceLocation id, MinecraftServer server) {
@@ -99,6 +120,32 @@ public class RestrictionJS extends Restriction {
 
         public Builder unspawnable() {
             return unspawnable(false);
+        }
+
+        public Builder fromSpawner(String spawner) {
+            var spawnType = spawnTypeMap.get(spawner);
+
+            if (spawnType == null) {
+                ConsoleJS.SERVER.warn("Could not find spawn type named " + spawner);
+            } else {
+                includeSpawners.add(spawnType);
+                excludeSpawners.remove(spawnType);
+            }
+
+            return this;
+        }
+
+        public Builder notFromSpawner(String spawner) {
+            var spawnType = spawnTypeMap.get(spawner);
+
+            if (spawnType == null) {
+                ConsoleJS.SERVER.warn("Could not find spawn type named " + spawner);
+            } else {
+                excludeSpawners.add(spawnType);
+                includeSpawners.remove(spawnType);
+            }
+
+            return this;
         }
 
         public Builder usable() {
