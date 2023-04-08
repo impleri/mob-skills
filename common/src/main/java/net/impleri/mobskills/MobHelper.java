@@ -7,6 +7,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +45,7 @@ public class MobHelper {
         return usable;
     }
 
-    public static boolean canSpawn(LivingEntity entity, LevelAccessor levelAccessor, Vec3i position) {
+    public static boolean canSpawn(LivingEntity entity, LevelAccessor levelAccessor, Vec3i position, MobSpawnType spawnType) {
         var type = entity.getType();
         var spawnRadius = type.getCategory().getDespawnDistance();
 
@@ -53,6 +54,6 @@ public class MobHelper {
 
         var playersInRange = getNearbyPlayers((List<Player>) levelAccessor.players(), position, spawnRadius);
 
-        return Restrictions.INSTANCE.canSpawnAround(type, playersInRange, dimension, biome);
+        return Restrictions.INSTANCE.canSpawnAround(type, playersInRange, dimension, biome, spawnType);
     }
 }

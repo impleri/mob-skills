@@ -16,5 +16,10 @@ public class MobSkills {
     public static void init() {
         LOGGER.info("Loaded Mob Skills");
         INSTANCE.registerEventHandlers();
+        INSTANCE.registerCommands();
+    }
+
+    public static boolean toggleDebug() {
+        return LOGGER.toggleDebug();
     }
 }

@@ -5,6 +5,7 @@ import net.impleri.mobskills.MobSkills;
 import net.impleri.playerskills.restrictions.RestrictionsApi;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 
 import java.lang.reflect.Field;
@@ -52,7 +53,7 @@ public class Restrictions extends RestrictionsApi<EntityType<?>, Restriction> {
         return entityRestrictionsCache.computeIfAbsent(entity, this::populateEntityRestrictions);
     }
 
-    public boolean canSpawnAround(EntityType<?> entity, List<Player> players, ResourceLocation dimension, ResourceLocation biome) {
+    public boolean canSpawnAround(EntityType<?> entity, List<Player> players, ResourceLocation dimension, ResourceLocation biome, MobSpawnType spawnType) {
         var isTargetingNearbyPlayers = createExtraFilter(players);
 
         var denials = getRestrictionsFor(entity).stream()
@@ -60,10 +61,20 @@ public class Restrictions extends RestrictionsApi<EntityType<?>, Restriction> {
                 .filter(notInExcludedDimension(dimension))
                 .filter(inIncludedBiome(biome))
                 .filter(notInExcludedBiome(biome))
+                .filter(inIncludedSpawner(spawnType))
+                .filter(notInExcludedSpawner(spawnType))
                 .filter(isTargetingNearbyPlayers)
                 .count();
 
         return denials == 0;
+    }
+
+    protected Predicate<Restriction> inIncludedSpawner(MobSpawnType spawnType) {
+        return restriction -> restriction.includeSpawners.size() == 0 || restriction.includeSpawners.contains(spawnType);
+    }
+
+    protected Predicate<Restriction> notInExcludedSpawner(MobSpawnType spawnType) {
+        return restriction -> restriction.excludeSpawners.size() == 0 || !restriction.excludeSpawners.contains(spawnType);
     }
 
     private Predicate<Restriction> createExtraFilter(List<Player> players) {
