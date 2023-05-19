@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Mob Skills"
 authors = "impleri"
 description = '''
-A library mod that exposes KubeJS methods to control mob spawning.
+A library mod to control mob spawning using player-specific skills.
 '''
 #logoFile = ""
 
@@ -39,4 +39,18 @@ modId = "architectury"
 mandatory = true
 versionRange = "[6.2,)"
 ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.mobskills]]
+modId = "kubejs"
+mandatory = false
+versionRange = "[1902.6,)"
+ordering = "BEFORE"
+side = "BOTH"
+
+[[dependencies.mobskills]]
+modId = "crafttweaker"
+mandatory = false
+versionRange = "[10.1,)"
+ordering = "BEFORE"
 side = "BOTH"

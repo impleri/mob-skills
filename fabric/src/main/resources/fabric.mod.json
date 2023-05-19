@@ -3,7 +3,7 @@
   "id": "mobskills",
   "version": "${version}",
   "name": "Mob Skills",
-  "description": "A library mod that exposes KubeJS methods to control mob spawning.",
+  "description": "A library mod to control mob spawning using player-specific skills.",
   "authors": [
     "impleri"
   ],
@@ -17,7 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.impleri.mobskills.fabric.MobSkillsFabric"
+      "net.impleri.mobskills.client.fabric.MobSkillsFabric"
     ]
   },
   "mixins": [],
@@ -25,6 +25,10 @@
     "fabric": "*",
     "minecraft": "1.19.2",
     "architectury": ">=6.2.0",
-    "playerskills": ">=1.8.0"
+    "playerskills": ">=2.0"
+  },
+  "suggests": {
+    "kubejs": "*",
+    "crafttweaker": "*"
   }
 }
