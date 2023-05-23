@@ -1,4 +1,4 @@
-package net.impleri.mobskills.client.forge
+package net.impleri.mobskills.forge
 
 import dev.architectury.platform.forge.EventBuses
 import net.impleri.mobskills.MobSkills

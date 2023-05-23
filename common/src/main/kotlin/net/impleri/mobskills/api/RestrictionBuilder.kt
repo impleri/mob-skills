@@ -29,7 +29,7 @@ class RestrictionBuilder : AbstractRestrictionBuilder<EntityType<*>, Restriction
 
     val restriction = Restriction(
       type,
-      builder.condition,
+      builder.actualCondition,
       builder.includeDimensions,
       builder.excludeDimensions,
       builder.includeBiomes,

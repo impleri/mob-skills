@@ -8,14 +8,14 @@ val craftTweakerVersion: String = property("crafttweaker_version").toString()
 val playerskillsVersion: String = property("playerskills_version").toString()
 
 dependencies {
-    implementation(kotlin("stdlib", kotlinVersion))
-    implementation(kotlin("reflect", kotlinVersion))
+  implementation(kotlin("stdlib", kotlinVersion))
+  implementation(kotlin("reflect", kotlinVersion))
 
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modApi("dev.architectury:architectury:$architecturyVersion")
+  modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+  modApi("dev.architectury:architectury:$architecturyVersion")
 
-    compileOnly("dev.latvian.mods:kubejs:$kubejsVersion")
-    compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-$minecraftVersion:$craftTweakerVersion")
+  compileOnly("dev.latvian.mods:kubejs:$kubejsVersion")
+  compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-$minecraftVersion:$craftTweakerVersion")
 
-    modImplementation("net.impleri:playerskills:$minecraftVersion-$playerskillsVersion")
+  modImplementation("net.impleri:playerskills:$minecraftVersion-$playerskillsVersion")
 }

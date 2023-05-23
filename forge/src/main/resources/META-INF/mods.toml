@@ -17,7 +17,7 @@ A library mod to control mob spawning using player-specific skills.
 modId = "playerskills"
 mandatory = true
 versionRange = "[1.8.0,)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.mobskills]]

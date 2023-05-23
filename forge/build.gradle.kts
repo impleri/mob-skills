@@ -9,15 +9,15 @@ val craftTweakerVersion: String = property("crafttweaker_version").toString()
 val playerskillsVersion: String = property("playerskills_version").toString()
 
 dependencies {
-    forge("net.minecraftforge:forge:$forgeVersion")
+  forge("net.minecraftforge:forge:$forgeVersion")
 
-    implementation("thedarkcolour:kotlinforforge:$kotlinForgeVersion")
-    forgeRuntimeLibrary(kotlin("stdlib", kotlinVersion))
-    forgeRuntimeLibrary(kotlin("reflect", kotlinVersion))
+  implementation("thedarkcolour:kotlinforforge:$kotlinForgeVersion")
+  forgeRuntimeLibrary(kotlin("stdlib", kotlinVersion))
+  forgeRuntimeLibrary(kotlin("reflect", kotlinVersion))
 
-    modImplementation("dev.architectury:architectury-forge:$architecturyVersion")
-    modImplementation("dev.latvian.mods:kubejs-forge:$kubejsVersion")
-    modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-$minecraftVersion:$craftTweakerVersion")
+  modImplementation("dev.architectury:architectury-forge:$architecturyVersion")
+  modImplementation("dev.latvian.mods:kubejs-forge:$kubejsVersion")
+  modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-$minecraftVersion:$craftTweakerVersion")
 
-    modImplementation("net.impleri:playerskills:$minecraftVersion-forge-$playerskillsVersion")
+  modImplementation("net.impleri:playerskills:$minecraftVersion-forge-$playerskillsVersion")
 }

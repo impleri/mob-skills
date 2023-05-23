@@ -6,6 +6,7 @@ import net.impleri.mobskills.api.MobRestriction
 import net.impleri.playerskills.restrictions.RestrictionConditionsBuilder
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobSpawnType
+import java.util.function.Predicate
 
 interface MobConditions<Player> : RestrictionConditionsBuilder<EntityType<*>, Player, Restriction> {
   var replacement: EntityType<*>?
@@ -14,7 +15,7 @@ interface MobConditions<Player> : RestrictionConditionsBuilder<EntityType<*>, Pl
   var includeSpawners: MutableList<MobSpawnType>
   var excludeSpawners: MutableList<MobSpawnType>
 
-  override fun unless(predicate: (Player) -> Boolean): MobConditions<Player> {
+  override fun unless(predicate: Predicate<Player>): MobConditions<Player> {
     when (spawnMode) {
       EntitySpawnMode.ALLOW_IF_ANY_MATCH -> {
         spawnMode = EntitySpawnMode.ALLOW_UNLESS_ANY_MATCH
@@ -68,15 +69,28 @@ interface MobConditions<Player> : RestrictionConditionsBuilder<EntityType<*>, Pl
     return this
   }
 
+  fun fromSpawner(spawner: MobSpawnType): MobConditions<Player> {
+    includeSpawners.add(spawner)
+    excludeSpawners.remove(spawner)
+
+    return this
+  }
+
   fun fromSpawner(spawner: String): MobConditions<Player> {
     val spawnType = MobRestriction.spawnTypeMap[spawner]
 
     if (spawnType == null) {
       MobSkills.LOGGER.warn("Could not find spawn type named $spawner")
     } else {
-      includeSpawners.add(spawnType)
-      excludeSpawners.remove(spawnType)
+      fromSpawner(spawnType)
     }
+
+    return this
+  }
+
+  fun notFromSpawner(spawner: MobSpawnType): MobConditions<Player> {
+    excludeSpawners.add(spawner)
+    includeSpawners.remove(spawner)
 
     return this
   }
@@ -87,8 +101,7 @@ interface MobConditions<Player> : RestrictionConditionsBuilder<EntityType<*>, Pl
     if (spawnType == null) {
       MobSkills.LOGGER.warn("Could not find spawn type named $spawner")
     } else {
-      excludeSpawners.add(spawnType)
-      includeSpawners.remove(spawnType)
+      notFromSpawner(spawnType)
     }
 
     return this

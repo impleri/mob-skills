@@ -12,26 +12,26 @@ val craftTweakerVersion: String = property("crafttweaker_version").toString()
 val playerskillsVersion: String = property("playerskills_version").toString()
 
 configure<UnifiedPublishingExtension> {
-    project {
-        relations {
-            depends {
-                curseforge.set("fabric-api")
-                modrinth.set("fabric-api")
-            }
-        }
+  project {
+    relations {
+      depends {
+        curseforge.set("fabric-api")
+        modrinth.set("fabric-api")
+      }
     }
+  }
 }
 
 dependencies {
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modApi("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+  modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+  modApi("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
 
-    modImplementation("net.fabricmc:fabric-language-kotlin:$kotlinFabricVersion+kotlin.$kotlinVersion")
+  modImplementation("net.fabricmc:fabric-language-kotlin:$kotlinFabricVersion+kotlin.$kotlinVersion")
 
-    modApi("dev.architectury:architectury-fabric:$architecturyVersion")
+  modApi("dev.architectury:architectury-fabric:$architecturyVersion")
 
-    modApi("dev.latvian.mods:kubejs-fabric:$kubejsVersion")
-    modImplementation("com.blamejared.crafttweaker:CraftTweaker-fabric-$minecraftVersion:$craftTweakerVersion")
+  modApi("dev.latvian.mods:kubejs-fabric:$kubejsVersion")
+  modImplementation("com.blamejared.crafttweaker:CraftTweaker-fabric-$minecraftVersion:$craftTweakerVersion")
 
-    modImplementation("net.impleri:playerskills:$minecraftVersion-fabric-$playerskillsVersion")
+  modImplementation("net.impleri:playerskills:$minecraftVersion-fabric-$playerskillsVersion")
 }

@@ -1,4 +1,4 @@
-package net.impleri.mobskills.client.fabric
+package net.impleri.mobskills.fabric
 
 import net.fabricmc.api.ModInitializer
 import net.impleri.mobskills.MobSkills

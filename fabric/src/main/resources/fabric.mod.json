@@ -17,7 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.impleri.mobskills.client.fabric.MobSkillsFabric"
+      "net.impleri.mobskills.fabric.MobSkillsFabric"
     ]
   },
   "mixins": [],
