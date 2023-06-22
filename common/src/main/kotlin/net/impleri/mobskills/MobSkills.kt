@@ -26,8 +26,9 @@ import net.minecraft.world.level.LevelAccessor
 class MobSkills {
   private var savedServer: MinecraftServer? = null
 
-  internal val server: MinecraftServer
-    get() = savedServer ?: throw RuntimeException("Unable to access the server before it is available")
+  internal val server: MinecraftServer by lazy {
+    savedServer ?: throw RuntimeException("Unable to access the server before it is available")
+  }
 
   private fun registerEventHandlers() {
     LifecycleEvent.SERVER_STARTING.register(
@@ -104,7 +105,9 @@ class MobSkills {
 
     val LOGGER: PlayerSkillsLogger = PlayerSkillsLogger.create(MOD_ID, "MOBS")
 
-    internal val INSTANCE = MobSkills()
+    private val INSTANCE = MobSkills()
+
+    internal val server: Lazy<MinecraftServer> = lazy { INSTANCE.server }
 
     fun init() {
       LOGGER.info("Loaded Mob Skills")

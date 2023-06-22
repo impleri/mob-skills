@@ -11,8 +11,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobSpawnType
 import java.util.function.Predicate
 
-class RestrictionConditionsBuilder @HideFromJS constructor(
-  server: MinecraftServer,
+class RestrictionConditionsBuilderJS @HideFromJS constructor(
+  server: Lazy<MinecraftServer>,
 ) : AbstractRestrictionConditionsBuilder<EntityType<*>, Restriction>(server), MobConditions<PlayerDataJS> {
   @HideFromJS
   override var replacement: EntityType<*>? = null
@@ -29,31 +29,31 @@ class RestrictionConditionsBuilder @HideFromJS constructor(
   @HideFromJS
   override var excludeSpawners: MutableList<MobSpawnType> = ArrayList()
 
-  override fun unless(predicate: Predicate<PlayerDataJS>): RestrictionConditionsBuilder {
+  override fun unless(predicate: Predicate<PlayerDataJS>): RestrictionConditionsBuilderJS {
     super<MobConditions>.unless(predicate)
 
     return this
   }
 
-  fun spawnable(): RestrictionConditionsBuilder {
+  fun spawnable(): RestrictionConditionsBuilderJS {
     spawnable(null)
 
     return this
   }
 
-  fun unspawnable(): RestrictionConditionsBuilder {
+  fun unspawnable(): RestrictionConditionsBuilderJS {
     unspawnable(null)
 
     return this
   }
 
   @HideFromJS
-  override fun fromSpawner(spawner: MobSpawnType): RestrictionConditionsBuilder {
-    return super.fromSpawner(spawner) as RestrictionConditionsBuilder
+  override fun fromSpawner(spawner: MobSpawnType): RestrictionConditionsBuilderJS {
+    return super.fromSpawner(spawner) as RestrictionConditionsBuilderJS
   }
 
   @HideFromJS
-  override fun notFromSpawner(spawner: MobSpawnType): RestrictionConditionsBuilder {
-    return super.notFromSpawner(spawner) as RestrictionConditionsBuilder
+  override fun notFromSpawner(spawner: MobSpawnType): RestrictionConditionsBuilderJS {
+    return super.notFromSpawner(spawner) as RestrictionConditionsBuilderJS
   }
 }
